@@ -1,5 +1,5 @@
 'use strict';
-angular.module('myApp.profile.services', []).constant('API_URL', 'http://localhost:3000/api')
+angular.module('myApp.profile.services', []).constant('API_URL', 'http://127.0.0.1:3000/api')
     .factory('profileService', ['$http', 'API_URL', function($http, API_URL) {
 
         return {

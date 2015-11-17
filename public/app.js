@@ -36,7 +36,7 @@ config(['$routeProvider', '$locationProvider', function($routeProvider, $locatio
 }]).run(function($rootScope, $location, $http) {
     $http({
         method: 'GET',
-        url: 'http://localhost:3000/api/me'
+        url: 'http://127.0.0.1:3000/api/me'
     }).then(function successCallback(response) {
         console.log(JSON.stringify(response));
         $rootScope.loggedInUser = true;

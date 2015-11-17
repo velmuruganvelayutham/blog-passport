@@ -2,6 +2,12 @@ var express = require('express'); // call express
 var mongoose = require('mongoose');
 var passport = require('passport')
 var LocalStrategy = require('passport-local').Strategy;
+var util = require('util');
+var GitHubStrategy = require('passport-github').Strategy;
+
+var GITHUB_CLIENT_ID = "ee809a6c8460249d1f23"
+var GITHUB_CLIENT_SECRET = "01ff71b613243de5efdfeec9cf8805c2e2aa0ce7";
+
 var User = require('../model/user.js');
 mongoose.connect('mongodb://localhost/learnyoumongo', function(err) {
     console.log('connected !' + err);
@@ -118,6 +124,28 @@ var verify = function(username, password, done) {
     });
 }
 
+// Use the GitHubStrategy within Passport.
+//   Strategies in Passport require a `verify` function, which accept
+//   credentials (in this case, an accessToken, refreshToken, and GitHub
+//   profile), and invoke a callback with a user object.
+passport.use(new GitHubStrategy({
+        clientID: GITHUB_CLIENT_ID,
+        clientSecret: GITHUB_CLIENT_SECRET,
+        callbackURL: "http://127.0.0.1:3000/api/auth/github/callback"
+    },
+    function(accessToken, refreshToken, profile, done) {
+        // asynchronous verification, for effect...
+        process.nextTick(function() {
+
+            // To keep the example simple, the user's GitHub profile is returned to
+            // represent the logged-in user.  In a typical application, you would want
+            // to associate the GitHub account with a user record in your database,
+            // and return that user instead.
+            return done(null, profile);
+        });
+    }
+));
+
 passport.use(new LocalStrategy(verify));
 passport.serializeUser(function(user, done) {
     done(null, user.id);
@@ -173,6 +201,32 @@ router.get('/me', function(req, res, next) {
     }
 
 });
+
+
+// GET /auth/github
+//   Use passport.authenticate() as route middleware to authenticate the
+//   request.  The first step in GitHub authentication will involve redirecting
+//   the user to github.com.  After authorization, GitHubwill redirect the user
+//   back to this application at /auth/github/callback
+router.get('/auth/github',
+    passport.authenticate('github'),
+    function(req, res) {
+        // The request will be redirected to GitHub for authentication, so this
+        // function will not be called.
+    });
+
+// GET /auth/github/callback
+//   Use passport.authenticate() as route middleware to authenticate the
+//   request.  If authentication fails, the user will be redirected back to the
+//   login page.  Otherwise, the primary route function function will be called,
+//   which, in this example, will redirect the user to the home page.
+router.get('/auth/github/callback',
+    passport.authenticate('github', {
+        failureRedirect: '/login'
+    }),
+    function(req, res) {
+        res.redirect('/');
+    });
 
 
 // more routes for our API will happen here
