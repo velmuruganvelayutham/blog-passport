@@ -1,0 +1,42 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <ab-panel ab-title="Panel Table-1 ">
+                <h1> Panel content 1 come here!.</h1>
+            </ab-panel>
+        </div>
+        <div class="col-md-6">
+            <ab-panel ab-title="Panel Table-2">
+                <h1> Panel content 2 come here!.</h1>
+            </ab-panel>
+        </div>
+    </div>
+</div>
+<div class="container" ng-controller="TodoController">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <h2>what would like to do ?. </h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="form-group">
+                <input type="text" name="todoText" ng-model="todo" class="form-control">
+            </div>
+        </div>
+        <button class="btn btn-primary" ng-click="addToDo(todo)">Add</button>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <p> {{todo}}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div ng-repeat="td in todoList">
+            <div class="col-md-4 col-md-offset-4">
+                {{td.text}}
+            </div>
+            <button class="btn btn-danger" ng-click="removeToDo(td)">Remove</button>
+        </div>
+    </div>
+</div>

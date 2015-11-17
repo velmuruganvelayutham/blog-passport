@@ -1,0 +1,57 @@
+<div class="container">
+    <div class="panel panel-success" ng-show="message">
+        <div class="panel-heading">
+            <h3 class="panel-title">Notification</h3>
+        </div>
+        <div class="panel-body">
+            <p class="bg-info">{{message}}</p>
+        </div>
+    </div>
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3 class="panel-title">User Form</h3>
+        </div>
+        <div class="panel-body">
+            <form name="form" ng-submit="addUser(user)" novalidate="" class="form ng-pristine ng-valid">
+                <div class="form-group">
+                    <label>ID</label>
+                    <input name="id" ng-model="user.username" class="form-control ng-pristine ng-untouched ng-valid">
+                </div>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input name="name" ng-model="user.password" class="form-control ng-pristine ng-untouched ng-valid">
+                </div>
+                <div class="form-group has-error">
+                    <p ng-show="form.email.$error.required &amp;&amp; form.password.$error.required &amp;&amp; submitted" class="help-block ng-hide">Please enter your email and password.</p>
+                    <p class="help-block ng-binding"></p>
+                </div>
+                <div id="login">
+                    <input type="submit" ng-hide="update" class="btn btn-success" value="save">
+                    <input type="submit" ng-show="update" class="btn btn-success" value="update">
+                    <button type="reset" class="btn btn-success">Reset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table class="table table table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="user in users">
+                <td> {{user._id}}</td>
+                <td> {{user.username}}</td>
+                <td> {{user | userIdGenerator | lowercase }}</td>
+                <td>
+                    <button class="btn btn-success" ng-click="editUser(user)">Edit</button>
+                    <button class="btn btn-danger" ng-click="deleteUser(user._id)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
