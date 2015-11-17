@@ -9,13 +9,14 @@ var GITHUB_CLIENT_ID = "ee809a6c8460249d1f23"
 var GITHUB_CLIENT_SECRET = "01ff71b613243de5efdfeec9cf8805c2e2aa0ce7";
 
 var User = require('../model/user.js');
-mongoose.connect('mongodb://localhost/learnyoumongo', function(err) {
+/*mongoose.connect('mongodb://localhost/learnyoumongo', function(err) {
+    console.log('connected !' + err);
+});*/
+
+mongoose.connect('mongodb://admin:admin@ds053954.mongolab.com:53954/angular-blog', function(err) {
     console.log('connected !' + err);
 });
 
-/*mongoose.connect('mongodb://admin:admin@ds053954.mongolab.com:53954/angular-blog', function(err) {
-    console.log('connected !' + err);
-});*/
 mongoose.set('debug', true)
     // ROUTES FOR OUR API
     // =============================================================================
@@ -141,18 +142,30 @@ passport.use(new GitHubStrategy({
             // represent the logged-in user.  In a typical application, you would want
             // to associate the GitHub account with a user record in your database,
             // and return that user instead.
-            return done(null, profile);
+            var user = new User();
+            user.username = profile.username;
+            user.password = profile.id;
+            user.save(function(err, user) {
+                if (err) {
+                    done(err);
+                }
+                return done(null, user);
+            });
+            return done(null, user);
         });
     }
 ));
 
 passport.use(new LocalStrategy(verify));
 passport.serializeUser(function(user, done) {
-    done(null, user.id);
+    console.log('user is serialized !' + user);
+    done(null, user._id);
 });
 
 passport.deserializeUser(function(id, done) {
+
     User.findById(id, function(err, user) {
+        console.log('user is deserialized !' + id);
         done(err, user);
     });
 });
@@ -170,6 +183,7 @@ router.post('/login', passport.authenticate('local'), function(req, res, next) {
     }
 
 });
+
 router.post('/signup', function(req, res) {
 
     var user = new User();
