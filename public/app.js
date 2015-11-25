@@ -20,7 +20,8 @@ config(['$routeProvider', '$locationProvider', function($routeProvider, $locatio
         controller: 'ProfileController'
     });
     $routeProvider.when('/signup', {
-        templateUrl: 'profile/signup.html'
+        templateUrl: 'profile/signup.html',
+        controller: 'ProfileController'
     });
 
     $routeProvider.when('/users', {

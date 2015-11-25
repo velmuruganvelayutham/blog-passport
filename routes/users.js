@@ -1,6 +1,11 @@
 var express = require('express'); // call express
 var mongoose = require('mongoose');
 var passport = require('passport')
+var jwt = require('express-jwt');
+var auth = jwt({
+    secret: 'SECRET',
+    userProperty: 'payload'
+});
 var LocalStrategy = require('passport-local').Strategy;
 var util = require('util');
 var GitHubStrategy = require('passport-github').Strategy;
@@ -156,7 +161,27 @@ passport.use(new GitHubStrategy({
     }
 ));
 
-passport.use(new LocalStrategy(verify));
+var jsonVerify = function(username, password, done) {
+    User.findOne({
+        username: username
+    }, function(err, user) {
+        if (err) {
+            return done(err);
+        }
+        if (!user) {
+            return done(null, false, {
+                message: 'Incorrect username.'
+            });
+        }
+        if (!user.validPassword(password)) {
+            return done(null, false, {
+                message: 'Incorrect password.'
+            });
+        }
+        return done(null, user);
+    });
+}
+passport.use(new LocalStrategy(jsonVerify));
 passport.serializeUser(function(user, done) {
     console.log('user is serialized !' + user);
     done(null, user._id);
@@ -172,7 +197,7 @@ passport.deserializeUser(function(id, done) {
 
 
 /* GET users listing. */
-router.post('/login', passport.authenticate('local'), function(req, res, next) {
+/*router.post('/login', passport.authenticate('local'), function(req, res, next) {
 
     if (req.user) {
         console.log(' already authenticated !');
@@ -183,6 +208,7 @@ router.post('/login', passport.authenticate('local'), function(req, res, next) {
     }
 
 });
+*/
 
 router.post('/signup', function(req, res) {
 
@@ -200,6 +226,53 @@ router.post('/signup', function(req, res) {
 
 });
 
+
+router.post('/register', function(req, res, next) {
+    if (!req.body.username || !req.body.password) {
+        return res.status(400).json({
+            message: 'Please fill out all fields'
+        });
+    }
+
+    var user = new User();
+
+    user.username = req.body.username;
+
+    user.setPassword(req.body.password)
+
+    user.save(function(err) {
+        if (err) {
+            return next(err);
+        }
+
+        return res.json({
+            token: user.generateJWT()
+        })
+    });
+});
+
+
+router.post('/login', function(req, res, next) {
+    if (!req.body.username || !req.body.password) {
+        return res.status(400).json({
+            message: 'Please fill out all fields'
+        });
+    }
+
+    passport.authenticate('local', function(err, user, info) {
+        if (err) {
+            return next(err);
+        }
+
+        if (user) {
+            return res.json({
+                token: user.generateJWT()
+            });
+        } else {
+            return res.status(401).json(info);
+        }
+    })(req, res, next);
+});
 
 router.get('/logout', function(req, res, next) {
     req.logout();
@@ -236,11 +309,10 @@ router.get('/auth/github',
 //   which, in this example, will redirect the user to the home page.
 router.get('/auth/github/callback',
     passport.authenticate('github', {
+        successRedirect: '/',
         failureRedirect: '/login'
-    }),
-    function(req, res) {
-        res.redirect('/');
-    });
+    }));
+
 
 
 // more routes for our API will happen here

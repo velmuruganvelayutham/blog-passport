@@ -1,7 +1,7 @@
 <div ng-include="'jumbotron.html'">
 </div>
 <div class="container">
-    <form name="form" method="post" action="/api/signup" novalidate="" class="form ng-pristine ng-valid">
+    <form name="form" ng-submit="register(user)" novalidate="" class="form ng-pristine ng-valid">
         <div class="form-group">
             <label>Name</label>
             <input name="username" ng-model="user.username" class="form-control ng-pristine ng-untouched ng-valid">
