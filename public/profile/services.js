@@ -116,14 +116,27 @@ angular.module('myApp.profile.services', []).constant('API_URL', 'http://127.0.0
         $scope.isLoggedIn = auth.isLoggedIn;
         $scope.currentUser = auth.currentUser;
         $scope.logOut = auth.logOut;
-        $scope.isLoggedIn = auth.register;
-        $scope.currentUser = auth.logIn;
+        //$scope.register = auth.register;
+        //$scope.logIn = auth.logIn;
 
-        $scope.login = function(user) {
-            profileService.login(user).then(function(response) {
+        $scope.logIn = function(user) {
+            auth.logIn(user).error(function(error) {
+                $scope.error = error;
+                // $location.path('/dashboard');
+            }).then(function(success) {
                 $rootScope.loggedInUser = true;
                 $location.path('/dashboard');
-            })
+            });
+        };
+
+        $scope.register = function(user) {
+            auth.register(user).error(function(error) {
+                $scope.error = error;
+                // $location.path('/dashboard');
+            }).then(function(success) {
+                $rootScope.loggedInUser = true;
+                $location.path('/dashboard');
+            });
         };
         $scope.listUsers = function() {
             profileService.listUsers().then(function(response) {
@@ -173,8 +186,8 @@ angular.module('myApp.profile.services', []).constant('API_URL', 'http://127.0.0
         }
 
 
-     /*   $scope.listUsers();
-*/
+        /*   $scope.listUsers();
+         */
 
         $scope.$watch('user.username', function(newVal, oldVal) {
             console.log(newVal + "- -" + oldVal);

@@ -101,12 +101,13 @@ router.route('/users/:user_id')
     });
 
 // Authentication and Authorization Middleware
-var auth = function(req, res, next) {
+/*var auth = function(req, res, next) {
     if (req.session && req.session.user === "amy" && req.session.admin)
         return next();
     else
         return res.sendStatus(401);
 };
+*/
 
 function handleError(res, err) {
     return res.status(500).send(err);
@@ -233,22 +234,34 @@ router.post('/register', function(req, res, next) {
             message: 'Please fill out all fields'
         });
     }
-
-    var user = new User();
-
-    user.username = req.body.username;
-
-    user.setPassword(req.body.password)
-
-    user.save(function(err) {
+    User.findOne({
+        username: req.body.username
+    }, function(err, user) {
         if (err) {
             return next(err);
         }
+        if (user) {
+            return res.status(400).json({
+                message: 'User already exists! '
+            });
+        } else {
+            var user = new User();
+            user.username = req.body.username;
+            user.setPassword(req.body.password)
 
-        return res.json({
-            token: user.generateJWT()
-        })
+            user.save(function(err) {
+                if (err) {
+                    return next(err);
+                }
+
+                return res.json({
+                    token: user.generateJWT()
+                })
+            });
+        }
     });
+
+
 });
 
 
