@@ -68,18 +68,22 @@ angular.module('myApp.profile.services', []).constant('API_URL', 'http://127.0.0
     }]).factory('auth', ['$http', '$window', function($http, $window) {
         var auth = {};
         auth.saveToken = function(token) {
+            console.log('save token ' + token);
             $window.localStorage['angular-blog'] = token;
         };
         auth.getToken = function() {
+            console.log('get token ' + $window.localStorage['angular-blog']);
             return $window.localStorage['angular-blog'];
         }
 
         auth.isLoggedIn = function() {
             var token = auth.getToken();
-
+            console.log('Token is ' + token);
             if (token) {
-                var payload = JSON.parse($window.atob(token.split('.')[1]));
-
+                var base64Url = token.split('.')[1];
+                var base64 = base64Url.replace('-', '+').replace('_', '/');
+                var payload = JSON.parse($window.atob(base64));
+                /*var payload = JSON.parse($window.atob(token.split('.')[1]));*/
                 return payload.exp > Date.now() / 1000;
             } else {
                 return false;
@@ -88,21 +92,25 @@ angular.module('myApp.profile.services', []).constant('API_URL', 'http://127.0.0
 
         auth.currentUser = function() {
             if (auth.isLoggedIn()) {
-                var token = auth.getToken();
-                var payload = JSON.parse($window.atob(token.split('.')[1]));
 
+                var token = auth.getToken();
+                var base64Url = token.split('.')[1];
+                var base64 = base64Url.replace('-', '+').replace('_', '/');
+                var payload = JSON.parse($window.atob(base64));
                 return payload.username;
             }
         };
 
         auth.register = function(user) {
             return $http.post('/api/register', user).success(function(data) {
+                console.log(data.token);
                 auth.saveToken(data.token);
             });
         };
 
         auth.logIn = function(user) {
             return $http.post('/api/login', user).success(function(data) {
+                console.log(data.token);
                 auth.saveToken(data.token);
             });
         };
@@ -110,6 +118,7 @@ angular.module('myApp.profile.services', []).constant('API_URL', 'http://127.0.0
         auth.logOut = function() {
             $window.localStorage.removeItem('angular-blog');
         };
+        //  auth.logOut();
         return auth;
     }]).controller('ProfileController', ['$scope', '$location', '$rootScope', 'profileService', '$filter', 'auth', function($scope, $location, $rootScope, profileService, $filter, auth) {
         $scope.user = {};

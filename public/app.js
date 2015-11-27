@@ -34,8 +34,8 @@ config(['$routeProvider', '$locationProvider', function($routeProvider, $locatio
         redirectTo: '/dashboard'
     });
 
-}]).run(function($rootScope, $location, $http) {
-    $http({
+}]).run(function($rootScope, $location, $http, auth, $window) {
+    /*$http({
         method: 'GET',
         url: 'http://127.0.0.1:3000/api/me'
     }).then(function successCallback(response) {
@@ -45,16 +45,21 @@ config(['$routeProvider', '$locationProvider', function($routeProvider, $locatio
     }, function errorCallback(response) {
         console.log('not authenticated!');
         delete $rootScope.loggedInUser;
-    });
+    });*/
+    if (auth.isLoggedIn()) {
+        $location.path("/dashboard");
+    }
+
     $rootScope.$on("$routeChangeStart", function(event, next, current) {
 
-
-        if ($rootScope.loggedInUser == null) {
+        /*if ($rootScope.loggedInUser == null) {*/
+        if (!auth.isLoggedIn()) {
             // no logged user, redirect to /login
             if (next.templateUrl === "profile/login.html" || next.templateUrl === "profile/signup.html") {} else {
                 $location.path("/login");
             }
         }
+
     });
 }).controller('TodoController', ['$scope', function($scope) {
 
