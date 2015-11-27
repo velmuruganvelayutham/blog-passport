@@ -1,6 +1,6 @@
 'use strict';
 angular.module('myApp.profile.services', []).constant('API_URL', 'http://127.0.0.1:3000/api')
-    .factory('profileService', ['$http', 'API_URL', function($http, API_URL) {
+    .factory('profileService', ['$http', 'API_URL', 'auth', function($http, API_URL, auth) {
 
         return {
             login: function(user) {
@@ -18,16 +18,31 @@ angular.module('myApp.profile.services', []).constant('API_URL', 'http://127.0.0
             },
 
             listUsers: function() {
-                return $http({
+                var listPromise = $http({
                     method: 'GET',
                     url: API_URL + '/users'
+                }).then(function successCallback(response) {
+                    console.log(JSON.stringify(response.data));
+                    return response.data;
+                }, function errorCallback(response) {
+                    alert('error');
                 });
+                return listPromise;
             },
+
+            /*return $http({
+                method: 'GET',
+                url: API_URL + '/users'
+            });*/
+
 
             addUser: function(user) {
                 var addPromise = $http({
                     method: 'POST',
                     url: API_URL + '/users',
+                    headers: {
+                        Authorization: 'Bearer ' + auth.getToken()
+                    },
                     data: user
                 }).then(function successCallback(response) {
                     console.log(JSON.stringify(response.data));
@@ -120,14 +135,15 @@ angular.module('myApp.profile.services', []).constant('API_URL', 'http://127.0.0
         };
         //  auth.logOut();
         return auth;
-    }]).controller('ProfileController', ['$scope', '$location', '$rootScope', 'profileService', '$filter', 'auth', function($scope, $location, $rootScope, profileService, $filter, auth) {
+    }]).controller('ProfileController', ['$scope', '$location', '$rootScope', 'profileService', '$filter', 'auth', 'fetchUsers', function($scope, $location, $rootScope, profileService, $filter, auth, fetchUsers) {
         $scope.user = {};
         $scope.isLoggedIn = auth.isLoggedIn;
         $scope.currentUser = auth.currentUser;
         $scope.logOut = auth.logOut;
         //$scope.register = auth.register;
         //$scope.logIn = auth.logIn;
-
+        console.log(fetchUsers);
+        $scope.users = fetchUsers;
         $scope.logIn = function(user) {
             auth.logIn(user).error(function(error) {
                 $scope.error = error;
@@ -149,7 +165,7 @@ angular.module('myApp.profile.services', []).constant('API_URL', 'http://127.0.0
         };
         $scope.listUsers = function() {
             profileService.listUsers().then(function(response) {
-                $scope.users = response.data;
+                $scope.users = response;
                 console.log($scope.users);
             })
         };

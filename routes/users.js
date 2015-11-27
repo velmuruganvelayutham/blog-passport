@@ -39,7 +39,10 @@ router.get('/', function(req, res) {
     });
 });
 
-router.route('/users').post(function(req, res) {
+router.route('/users').post(auth, function(req, res) {
+    if (req.payload) {
+        console.log("token is found! " + req.payload.username);
+    }
     var user = new User();
     user.username = req.body.username;
     user.password = req.body.password;

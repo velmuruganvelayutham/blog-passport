@@ -15,18 +15,40 @@ config(['$routeProvider', '$locationProvider', function($routeProvider, $locatio
     $routeProvider.when('/contact', {
         templateUrl: 'dashboard.html'
     });
+    var fetchUserResolve = function($http, $q, API_URL) {
+        var deferred = $q.defer();
+        $http({
+            method: 'GET',
+            url: API_URL + '/users'
+        }).then(function successCallback(response) {
+            console.log(JSON.stringify(response.data));
+            deferred.resolve(response.data);
+        }, function errorCallback(response) {
+            deferred.reject()
+        })
+        return deferred.promise;
+    };
     $routeProvider.when('/login', {
         templateUrl: 'profile/login.html',
-        controller: 'ProfileController'
+        controller: 'ProfileController',
+        resolve: {
+            fetchUsers: fetchUserResolve
+        }
     });
     $routeProvider.when('/signup', {
         templateUrl: 'profile/signup.html',
-        controller: 'ProfileController'
+        controller: 'ProfileController',
+        resolve: {
+            fetchUsers: fetchUserResolve
+        }
     });
 
     $routeProvider.when('/users', {
         templateUrl: 'profile/users.html',
-        controller: 'ProfileController'
+        controller: 'ProfileController',
+        resolve: {
+            fetchUsers: fetchUserResolve
+        }
     });
     $routeProvider.when('/settings', {
         templateUrl: 'profile/settings.html'
