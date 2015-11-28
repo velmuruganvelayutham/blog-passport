@@ -1,5 +1,5 @@
 'use strict';
-angular.module('myApp.profile.services', []).constant('API_URL', 'http://127.0.0.1:3000/api')
+angular.module('myApp.profile.services', []).constant('API_URL', 'https://vel-votingapp.herokuapp.com/api')
     .factory('profileService', ['$http', 'API_URL', 'auth', function($http, API_URL, auth) {
 
         return {

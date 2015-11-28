@@ -57,17 +57,7 @@ config(['$routeProvider', '$locationProvider', function($routeProvider, $locatio
     });
 
 }]).run(function($rootScope, $location, $http, auth, $window) {
-    /*$http({
-        method: 'GET',
-        url: 'http://127.0.0.1:3000/api/me'
-    }).then(function successCallback(response) {
-        console.log(JSON.stringify(response));
-        $rootScope.loggedInUser = true;
-        $location.path("/dashboard");
-    }, function errorCallback(response) {
-        console.log('not authenticated!');
-        delete $rootScope.loggedInUser;
-    });*/
+
     if (auth.isLoggedIn()) {
         $location.path("/dashboard");
     }
