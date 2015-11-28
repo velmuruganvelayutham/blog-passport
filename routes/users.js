@@ -103,36 +103,12 @@ router.route('/users/:user_id')
 
     });
 
-// Authentication and Authorization Middleware
-/*var auth = function(req, res, next) {
-    if (req.session && req.session.user === "amy" && req.session.admin)
-        return next();
-    else
-        return res.sendStatus(401);
-};
-*/
+
 
 function handleError(res, err) {
     return res.status(500).send(err);
 }
-var verify = function(username, password, done) {
 
-    console.log(username + password);
-    User.findOne({
-        username: username
-    }, function(err, user) {
-        if (err) {
-            return done(err);
-        }
-        if (!user) {
-            return done(null, false, {
-                message: 'Incorrect username.'
-            });
-        }
-
-        return done(null, user);
-    });
-}
 
 // Use the GitHubStrategy within Passport.
 //   Strategies in Passport require a `verify` function, which accept
@@ -200,36 +176,6 @@ passport.deserializeUser(function(id, done) {
 });
 
 
-/* GET users listing. */
-/*router.post('/login', passport.authenticate('local'), function(req, res, next) {
-
-    if (req.user) {
-        console.log(' already authenticated !');
-        res.redirect('/');
-    } else {
-        console.log('authenticated now !');
-        res.redirect('/');
-    }
-
-});
-*/
-
-router.post('/signup', function(req, res) {
-
-    var user = new User();
-    user.username = req.body.username;
-    user.password = req.body.password;
-
-    console.log('User is ' + user);
-    user.save(function(err, user) {
-        if (err)
-            return handleError(res, err);
-        res.redirect('/');
-
-    });
-
-});
-
 
 router.post('/register', function(req, res, next) {
     if (!req.body.username || !req.body.password) {
@@ -293,15 +239,6 @@ router.post('/login', function(req, res, next) {
 router.get('/logout', function(req, res, next) {
     req.logout();
     res.redirect('/');
-
-});
-
-router.get('/me', function(req, res, next) {
-    if (req.user) {
-        res.json('true');
-    } else {
-        res.status(401).send('not authenticated!');
-    }
 
 });
 
