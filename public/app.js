@@ -65,13 +65,13 @@ config(['$routeProvider', '$locationProvider', function($routeProvider, $locatio
     $rootScope.$on("$routeChangeStart", function(event, next, current) {
 
         /*if ($rootScope.loggedInUser == null) {*/
-        if (!auth.isLoggedIn()) {
+        /* if (!auth.isLoggedIn()) {
             // no logged user, redirect to /login
             if (next.templateUrl === "profile/login.html" || next.templateUrl === "profile/signup.html") {} else {
                 $location.path("/login");
             }
         }
-
+*/
     });
 }).controller('TodoController', ['$scope', function($scope) {
 

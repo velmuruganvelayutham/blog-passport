@@ -1,42 +1,24 @@
+<div ng-include="'jumbotron.html'">
+</div>
 <div class="container">
     <div class="row">
-        <div class="col-md-6">
-            <ab-panel ab-title="Panel Table-1 ">
-                <h1> Panel content 1 come here!.</h1>
+        <div class="col-md-4">
+            <ab-panel ab-title=" Live Results: ">
+                <i class="fa fa-bolt fa-4x"></i>
+                <p>Live graphs show your poll results immediately in an easy to understand format.</p>
             </ab-panel>
         </div>
-        <div class="col-md-6">
-            <ab-panel ab-title="Panel Table-2">
-                <h1> Panel content 2 come here!.</h1>
+        <div class="col-md-4">
+            <ab-panel ab-title="Works Everywhere">
+                <i class="fa fa-globe fa-4x"></i>
+                <p> Traditional desktop computers now represent only 30% of Internet traffic. Your poll must work on the tablets, smart phones, netbooks and notebooks that your visitors are using. Our responsive designs do just that.</p>
             </ab-panel>
         </div>
-    </div>
-</div>
-<div class="container" ng-controller="TodoController">
-    <div class="row">
-        <div class="col-md-4 col-md-offset-4">
-            <h2>what would like to do ?. </h2>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4 col-md-offset-4">
-            <div class="form-group">
-                <input type="text" name="todoText" ng-model="todo" class="form-control">
-            </div>
-        </div>
-        <button class="btn btn-primary" ng-click="addToDo(todo)">Add</button>
-    </div>
-    <div class="row">
-        <div class="col-md-4 col-md-offset-4">
-            <p> {{todo}}</p>
-        </div>
-    </div>
-    <div class="row">
-        <div ng-repeat="td in todoList">
-            <div class="col-md-4 col-md-offset-4">
-                {{td.text}}
-            </div>
-            <button class="btn btn-danger" ng-click="removeToDo(td)">Remove</button>
+        <div class="col-md-4">
+            <ab-panel ab-title="Social Integration">
+                <i class="fa fa-github fa-4x"></i>
+                <p>Free integrated facebook or traditional comments allow your poll voters to provide immediate feedback and discuss results. Social share buttons encourage your poll voters to help spread the word.</p>
+            </ab-panel>
         </div>
     </div>
 </div>
