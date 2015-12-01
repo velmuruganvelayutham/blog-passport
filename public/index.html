@@ -20,8 +20,8 @@
     <meta name="description" content="">
     <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
     <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
-    <!--  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"> -->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.superhero.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <!-- <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.superhero.css"> -->
     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="app.css">
     <!-- <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script> -->
@@ -46,15 +46,18 @@
                     </li>
                     <li ng-class="menuClass('contact')"><a href="#contact">contact</a>
                     </li>
+                    <li ng-class="menuClass('polls')"><a href="#polls">polls</a>
+                    </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li ng-if="loggedInUser == true" ng-class="menuClass('settings')"><a href="#settings"> &nbsp; settings<span class="sr-only">(current)</span></a>
+                    <p ng-if="isLoggedIn() == true" class="navbar-text">Hello <b> <i> <u> {{currentUser()}} </u> </i> </b> </p>
+                    <li ng-if="isLoggedIn() == true" ng-class="menuClass('settings')"> <a href="#settings">settings<span class="sr-only">(current)</span></a>
                     </li>
-                    <li ng-if="loggedInUser == true" ng-class="menuClass('logout')"><a href="/api/logout">logout</a>
+                    <li ng-if="isLoggedIn() == true" ng-class="menuClass('logout')" ng-click="logOut()"><a href="/api/logout">logout</a>
                     </li>
-                    <li ng-if="loggedInUser != true" ng-class="menuClass('signup')"><a href="#signup">signup</a>
+                    <li ng-if="isLoggedIn() != true" ng-class="menuClass('signup')"><a href="#signup">signup</a>
                     </li>
-                    <li ng-if="loggedInUser != true" ng-class="menuClass('login')"><a href="#login">login</a>
+                    <li ng-if="isLoggedIn() != true" ng-class="menuClass('login')"><a href="#login">login</a>
                     </li>
                 </ul>
             </div>
@@ -73,6 +76,7 @@
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="app.js"></script>
     <script src="profile/services.js"></script>
+    <script src="polls/polls.js"></script>
     <script src="components/directives/panel.js"></script>
     <script src="components/version/version.js"></script>
     <script src="components/version/version-directive.js"></script>

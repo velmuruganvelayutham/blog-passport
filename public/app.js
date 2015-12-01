@@ -4,6 +4,7 @@
 angular.module('myApp', [
     'ngRoute',
     'myApp.profile.services',
+    'myApp.poll.controller',
     'myApp.directive.panel',
     'myApp.version'
 ]).
@@ -50,6 +51,9 @@ config(['$routeProvider', '$locationProvider', function($routeProvider, $locatio
             fetchUsers: fetchUserResolve
         }
     });
+    $routeProvider.when('/polls', {
+        templateUrl: 'polls/polls.html'
+    });
     $routeProvider.when('/settings', {
         templateUrl: 'profile/settings.html'
     }).otherwise({
@@ -88,7 +92,7 @@ config(['$routeProvider', '$locationProvider', function($routeProvider, $locatio
         }
     }
 
-}]).controller('MainController', ['$scope', '$location', function($scope, $location) {
+}]).controller('MainController', ['$scope', '$location', 'auth', function($scope, $location, auth) {
 
     $scope.menuClass = function(page) {
         var current = $location.path().substring(1);
@@ -98,5 +102,7 @@ config(['$routeProvider', '$locationProvider', function($routeProvider, $locatio
             return "";
         }
     }
-
+    $scope.currentUser = auth.currentUser;
+    $scope.isLoggedIn = auth.isLoggedIn;
+    $scope.logOut = auth.logOut;
 }]);

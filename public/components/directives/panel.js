@@ -26,7 +26,7 @@ angular.module('myApp.directive.panel', []).directive('abPanel', function() {
                 $scope.$broadcast('panelClick', {});
             }
             $scope.$on('panelClick', function() {
-                alert('Panel is clicked !');
+                //alert('Panel is clicked !');
             });
         }
     };
