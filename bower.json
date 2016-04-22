@@ -15,10 +15,13 @@
     "tests"
   ],
   "dependencies": {
-     "angular": "~1.4.0",
+    "angular": "~1.4.0",
     "angular-route": "~1.4.0",
     "angular-loader": "~1.4.0",
     "angular-mocks": "~1.4.0",
-    "html5-boilerplate": "~5.2.0"
+    "html5-boilerplate": "~5.2.0",
+    "jquery": "^2.2.3",
+    "font-awesome": "^4.6.1",
+    "bootstrap": "^3.3.6"
   }
 }
